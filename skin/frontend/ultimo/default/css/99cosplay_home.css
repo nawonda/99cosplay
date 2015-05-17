@@ -1,0 +1,37 @@
+.transition {
+    -webkit-transform: scale(1.08);
+    -moz-transform: scale(1.08);
+    -o-transform: scale(1.08);
+    transform: scale(1.08);
+}
+.slide{
+    -webkit-transition: all 0.8s ease-in-out;
+    -moz-transition: all 0.8s ease-in-out;
+    -o-transition: all 0.8s ease-in-out;
+    -ms-transition: all 0.8s ease-in-out;
+}
+
+.the-slideshow{
+    position: relative;
+}
+
+.prev_block{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+
+}
+
+.next_block{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 2;
+
+}
+
+
+.owl-prev, .owl-next, .owl-pagination{
+    z-index: 3;
+}

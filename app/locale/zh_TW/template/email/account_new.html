@@ -1,0 +1,56 @@
+<!--@subject Welcome, {{var customer.name}}! @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"skin url=\"images/logo_email.gif\" _area='frontend'":"Email Logo Image",
+"htmlescape var=$customer.name":"Customer Name",
+"store url=\"customer/account/\"":"Customer Account Url",
+"var customer.email":"Customer Email",
+"htmlescape var=$customer.password":"Customer Password"}
+@-->
+
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+
+<body style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+<div style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+<table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
+        <tr>
+            <td align="center" valign="top" style="padding:20px 0 20px 0">
+                <!-- [ header starts here] -->
+                <table bgcolor="FFFFFF" cellspacing="0" cellpadding="10" border="0" width="650" style="border:1px solid #E0E0E0;">
+                    <tr>
+                        <td valign="top">
+                            <a href="{{store url=""}}"><img src="{{skin url="images/logo_email.gif" _area='frontend'}}" alt="{{var store.getFrontendName()}}"  style="margin-bottom:10px;" border="0"/></a></td>
+                    </tr>
+                <!-- [ middle starts here] -->
+                    <tr>
+                      <td valign="top">
+                        <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;"">親愛的 {{htmlescape var=$customer.name}},</h1>
+                          <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">歡迎到 {{var store.getFrontendName()}}. 在參觀我們的網站時想要隨時登入，請在每頁的頂部點擊 <a href="{{store url="customer/account/"}}" style="color:#1E7EC8;">註冊</a> 或 <a href="{{store url="customer/account/"}}" style="color:#1E7EC8;">我的帳戶</a> 然後輸入您的電子郵件和密碼。</p>
+                            <p style="border:1px solid #E0E0E0; font-size:12px; line-height:16px; margin:0; padding:13px 18px; background:#f9f9f9;">
+                                當登入系統時，請使用以下資料：<br/>
+                                <strong>電子郵件：</strong>{{var customer.email}}<br/> 
+                                <strong>密碼：</strong>{{htmlescape var=$customer.password}}
+                            <p>
+                        <p style="font-size:12px; line-height:16px; margin:0 0 8px 0;">當登入到您的帳戶時，您可以：</p>
+                            <ul style="font-size:12px; line-height:16px; margin:0 0 16px 0; padding:0;">
+                              <li style="list-style:none inside; padding:0 0 0 10px;">&ndash;於購買時快速地進行結算及離開</li>
+                                <li style="list-style:none inside; padding:0 0 0 10px;">&ndash;檢查訂單的狀態</li>
+                                <li style="list-style:none inside; padding:0 0 0 10px;">&ndash;查看過去的訂單</li>
+                                <li style="list-style:none inside; padding:0 0 0 10px;">&ndash;變更您的帳戶資料</li>
+                                <li style="list-style:none inside; padding:0 0 0 10px;">&ndash;更改密碼</li>
+                                <li style="list-style:none inside; padding:0 0 0 10px;">&ndash;儲存替代地址(可以送貨至其他家庭成員和朋友!)</li>
+                          </ul>
+                          <p style="font-size:12px; line-height:16px; margin:0;">如果您有任何問題關於您的帳戶或其他方面，請與我們聯繫，電郵：<a href="mailto:%7B%7Bconfig%20path=%27trans_email/ident_support/email%27%7D%7D">{{config path='trans_email/ident_support/email'}}</a>或電話：{{config path='general/store_information/phone'}}。</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#EAEAEA" align="center" style="background:#EAEAEA; text-align:center;"><center><p style="font-size:12px; margin:0;"><span id="result_box4" lang="zh-TW">再次感謝您</span>, <strong>{{var store.getFrontendName()}}</strong></p></center></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>

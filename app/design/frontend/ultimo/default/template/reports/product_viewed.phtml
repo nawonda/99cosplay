@@ -1,0 +1,61 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this Mage_Reports_Block_Product_Viewed */
+?>
+<?php if ($_products = $this->getRecentlyViewedProducts()): ?>
+<div class="custom-section custom-regular">
+    <div class="viewed-products-wrapper block block-list block-viewed">
+        <div class="block-title">
+            <strong><span><?php echo "最近流覽過的商品" ?></span></strong>
+        </div>
+        <div class="block-content">
+            <div id="viewed-products">
+                <?php $viewed_count = 0;?>
+                <?php foreach ($_products as $index => $_product): ?>
+                <?php
+                $viewed_count++;
+                if($viewed_count > 5){break;}
+                $url = $_product->getProductUrl();
+                $name = $_product->getName(); //product name
+
+                $helpImg = $this->helper('infortis/image');
+                $imgWidth = 230;
+                $imgHeight = 165;
+                ?>
+                <div class="viewed-product-wrapper">
+                    <a href="<?php echo $url ?>" title="" class="product-image">
+                        <img id="product-collection-image-<?php echo $_product->getId(); ?>"
+                             src="<?php echo $helpImg->getImg($_product, $imgWidth, $imgHeight, 'small_image'); ?>"
+                             alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                    </a>
+                    <h3 class="product-name"><a href="<?php echo $url;?>" title="<?php echo $name;?>"><?php echo mb_substr($name,0,15, 'utf-8').'...' ;?></a></h3>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

@@ -1,0 +1,69 @@
+{* This is a comment block
+
+Use vars: {{var var_name}}
+*}<!--@subject Payment Transaction Failed Reminder @-->
+<!--@vars
+{"var reason":"Transaction Failed Reason",
+"var checkoutType":"Checkout Type",
+"var customerEmail":"Customer Email",
+"var customer":"Customer Name",
+"var items":"Shopping Cart Items",
+"var total":"Total",
+"var billingAddress.format('html')":"Billing Address",
+"var shippingAddress.format('html')":"Shipping Address",
+"var shippingMethod":"Shipping Method",
+"var paymentMethod":"Payment Method",
+"var dateAndTime":"Date and Time of Transaction"}
+@-->
+
+<table>
+    <thead>
+        <tr>
+            <th>付款交易失敗</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <p>
+                    <b>原因</b>：<br />
+                    {{var reason}}
+                </p>
+                <p>
+                    <b>結帳類型</b>：<br />
+                    {{var checkoutType}}
+                </p>
+                <p>
+                    <b>顧客</b>：<br />
+                    <a href="mailto:{{var customerEmail}}">{{var customer}}</a> &lt;{{var customerEmail}}&gt;
+                </p>
+                <p>
+                    <b>項目</b>：<br />
+                    {{var items}}
+                </p>
+                <p>
+                    <b>共計</b>：<br />
+                    {{var total}}
+                </p>
+                <p>
+                    <b>帳單地址：</b><br />
+                    {{var billingAddress.format('html')}}
+                </p>
+                <p>
+                    <b>送貨地址：</b><br />
+                    {{var shippingAddress.format('html')}}
+                </p>
+                <p><b>送貨方法：</b><br />
+                    {{var shippingMethod}}
+                </p>
+                <p><b>付款方法：</b><br />
+                    {{var paymentMethod}}
+                </p>
+                <p>
+                    <b>日期及時間：</b><br />
+                    {{var dateAndTime}}
+                </p>
+            </td>
+        </tr>
+    </tbody>
+</table>

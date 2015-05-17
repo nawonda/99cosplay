@@ -1,0 +1,599 @@
+<?php
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<?php
+	$theme = $this->helper('ultimo');
+	$helpHeader = $this->helper('ultimo/header');
+
+	//Sticky header
+	$sticky = $theme->getCfg('header/sticky');
+
+	//Mobile header
+	if ($sticky)
+	{
+		if (($mobileMenuThreshold = $helpHeader->getMobileMenuThreshold()) === NULL)
+		{
+			$mobileMenuThreshold = 770; //Set default value, if threshold doesn't exist
+		}
+	}
+	$mobileHeaderMode = $theme->getCfg('header/mode');
+
+	//Design settings
+	//--------------------------------------------------------------
+	$headerInnerBgColor     = $theme->getCfgDesign('header/inner_bg_color');
+	$headerTopInnerBgColor	= $theme->getCfgDesign('header_top/inner_bg_color');
+	$headerTopStretched		= $theme->getCfgDesign('header_top/stretched');
+	$headerPrimaryStretched	= $theme->getCfgDesign('header_primary/stretched');
+	$navInnerBgColor        = $theme->getCfgDesign('nav/inner_bg_color');
+	$navStretched           = $theme->getCfgDesign('nav/stretched');
+	$navDropShadow          = $theme->getCfgDesign('effects/shadow_nav');
+
+	//Header top
+	$classes['top'] = '';
+	if ($theme->isColor($headerInnerBgColor) || $theme->isColor($headerTopInnerBgColor))
+		$classes['top'] .= ' show-bg';
+	if ($headerTopStretched)
+		$classes['top'] .= ' stretched';
+
+	//Header primary
+	$classes['primary'] = '';
+	if ($theme->isColor($headerInnerBgColor))
+		$classes['primary'] .= ' show-bg';
+	if ($headerPrimaryStretched)
+		$classes['primary'] .= ' stretched';
+	
+	//Menu
+	$classes['nav'] = '';
+	if ($theme->isColor($navInnerBgColor)) //If menu has inner background color, add class indicating that it can have an outline
+		$classes['nav'] .= ' has-outline';
+	if ($navDropShadow === 'inner-container')
+		$classes['nav'] .= ' show-bg';
+	elseif ($navDropShadow === 'bar')
+		$classes['nav'] .= ' nav--bar-drop-shadow';
+	if ($navStretched)
+		$classes['nav'] .= ' stretched';
+
+	//Blocks
+	//--------------------------------------------------------------
+	$currencySwitcher = $this->getChildHtml('currency');
+	$languageSwitcher = $this->getChildHtml('store_language');
+	$hasHeaderCollateral = ($currencySwitcher || $languageSwitcher) ? TRUE : FALSE;
+
+	//Skip links count
+	$skipLinksCount = 0;
+
+	//Menu
+	$menuHtml =	$this->getChildHtml('topMenu');
+	if ($menuHtml) 
+	{
+		$skipLinksCount++;
+	}
+
+	//Search
+	$searchHtml = $this->getChildHtml('topSearch');
+	if ($searchHtml) 
+	{
+		$skipLinksCount++;
+	}
+
+	//Top links
+	$accountHtml = '';
+
+		//Additional custom Top Links
+		if ($tmpHtml = $this->getChildHtml('block_header_top_links2'))
+		{
+			$accountHtml .= $tmpHtml;
+		}
+
+		//Default Magento top links
+		if ($theme->getCfg('magento_blocks/top_links'))
+		{
+			$accountHtml .= $this->getChildHtml('topLinks');
+		}
+
+		//Custom top links
+		if ($tmpHtml = $this->getChildHtml('block_header_top_links'))
+		{
+			$accountHtml .= $tmpHtml;
+		}
+
+		if ($accountHtml) 
+		{
+			$skipLinksCount++;
+		}
+
+	//Mini compare
+	$miniCompareHtml = '';
+	if ($theme->getCfg('header/compare') && ($tmpHtml = $this->getChildHtml('compareMini')))
+	{
+		$miniCompareHtml = $tmpHtml;
+		$skipLinksCount++;
+	}
+
+	//Mini cart
+	$miniCartHtml = $this->getChildHtml('cart_sidebar');
+	if ($miniCartHtml) 
+	{
+		$skipLinksCount++;
+	}
+
+	//Search box classes
+	//--------------------------------------------------------------
+	$searchClasses = ' search-wrapper';
+	if (!$mobileHeaderMode)
+	{
+		//If mobile header disabled, apply old (deprecated) class to style the search box on mobile devices
+		$searchClasses .= ' search-wrapper-mobile';
+	}
+
+	//Search box
+	$tmpHtml = $searchHtml;
+	$searchPosition = $theme->getCfg('header/search_position');
+	switch ($searchPosition)
+	{
+		case 20:
+			$p['centralCol'][0] = $tmpHtml;
+			break;
+		case 30:
+			$p['rightCol'][0] = $tmpHtml;
+			break;
+		case 31:
+			$p['rightCol'][1] = $tmpHtml;
+			break;
+		case 32:
+			$p['rightCol'][2] = $tmpHtml;
+			break;
+		case 33:
+			$p['rightCol'][3] = $tmpHtml;
+			break;
+	}
+
+	//Line break
+	//--------------------------------------------------------------
+	$tmpHtml = '<div class="line-break-after"></div>';
+	$lineBreakPosition = $theme->getCfg('header/toplinks_break_position');
+	switch ($lineBreakPosition)
+	{
+		case 30:
+			$p['rightColBreak'][0] = $tmpHtml;
+			break;
+		case 31:
+			$p['rightColBreak'][1] = $tmpHtml;
+			break;
+		case 32:
+			$p['rightColBreak'][2] = $tmpHtml;
+			break;
+		case 33:
+			$p['rightColBreak'][3] = $tmpHtml;
+			break;
+		case 34:
+			$p['rightColBreak'][4] = $tmpHtml;
+			break;
+		case 35:
+			$p['rightColBreak'][5] = $tmpHtml;
+			break;
+	}
+
+	//Width (in grid units) of sections
+	//--------------------------------------------------------------
+	$leftColUnits               = 4; //$theme->getCfg('header/left_column');
+	$centralColUnits            = 4; //$theme->getCfg('header/center_column');
+	$rightColUnits              = 4; //$theme->getCfg('header/right_column');
+
+	//If no search box in the center
+	if (!isset($p['centralCol']))
+	{
+		$centralColUnits        = 0;
+		$rightColUnits          += 12 - ($leftColUnits + $rightColUnits);
+	}
+
+	//Grid classes
+	$leftColGridClass           = 'grid12-' . $leftColUnits;
+	$centralColGridClass        = 'grid12-' . $centralColUnits;
+	$rightColGridClass          = 'grid12-' . $rightColUnits;
+	if (empty($centralColUnits))
+	{
+		$centralColGridClass = '';
+	}
+?>
+<div class="header-container header-regular" id="top">
+<div class="header-container2">
+<div class="header-container3">
+
+	<div class="header-top-container">
+		<div class="header-top header container clearer<?php if ($classes['top']) echo " " . $classes['top']; ?>">
+			<div class="inner-container">
+
+				<?php if ($tmpHtml = $this->getChildHtml('block_header_top_left')): ?>
+					<div class="block_header_top_left item item-left"><?php echo $tmpHtml; ?></div>
+				<?php endif; ?>
+				<?php if ($tmpHtml = $this->getChildHtml('block_header_top_left2')): ?>
+					<div class="block_header_top_left2 item item-left"><?php echo $tmpHtml; ?></div>
+				<?php endif; ?>
+				<div class="item item-left hide-below-960">
+					<p class="welcome-msg"><?php echo $this->getChildHtml('welcome'); //$this->getWelcome(); ?> <?php echo $this->getAdditionalHtml(); ?></p>
+				</div>
+				
+				<?php if ($tmpHtml = $this->getChildHtml('block_header_top_right')): ?>
+					<div class="block_header_top_right item item-right"><?php echo $tmpHtml; ?></div>
+				<?php endif; ?>
+				<div id="currency-switcher-wrapper-regular" class="item item-right"><?php echo $currencySwitcher; ?></div>
+				<div id="lang-switcher-wrapper-regular" class="item item-right"><?php echo $languageSwitcher; ?></div>
+				<?php if ($tmpHtml = $this->getChildHtml('block_header_top_right2')): ?>
+					<div class="block_header_top_right2 item item-right"><?php echo $tmpHtml; ?></div>
+				<?php endif; ?>
+
+			</div> <!-- end: inner-container -->
+			<?php echo $this->getChildHtml('topContainer'); ?>
+		</div> <!-- end: header-top -->
+	</div> <!-- end: header-top-container -->
+
+	<div class="header-primary-container">
+		<div class="header-primary header container<?php if ($classes['primary']) echo " " . $classes['primary']; ?>">
+			<div class="inner-container">
+
+				<div class="hp-blocks-holder skip-links--<?php echo $skipLinksCount; ?>">
+
+					<?php if ($mobileHeaderMode && $hasHeaderCollateral): ?>
+						<!-- Mobile header collaterals -->
+						<div id="header-collateral" class="header-collateral">
+							<?php echo $languageSwitcher; ?>
+							<?php echo $currencySwitcher; ?>
+						</div>
+					<?php endif; ?>
+
+					<!-- Mobile logo -->
+					<div class="logo-wrapper--mobile">
+						<a class="logo logo--mobile" href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>">
+							<img src="<?php echo (($small = $this->getLogoSrcSmall()) ? $small : $this->getLogoSrc()); ?>" alt="<?php echo $this->getLogoAlt() ?>" />
+						</a>
+					</div>
+					<div class="clearer after-mobile-logo"></div>
+
+					<!-- Skip Links -->
+
+					<?php if ($menuHtml): ?>
+						<a href="#header-nav" class="skip-link skip-nav">
+							<span class="icon ic ic-menu"></span>
+							<span class="label"><?php echo $this->__('Menu'); ?></span>
+						</a>
+					<?php endif; ?>
+
+					<?php if ($searchHtml): ?>
+						<a href="#header-search" class="skip-link skip-search">
+							<span class="icon ic ic-search"></span>
+							<span class="label"><?php echo $this->__('Search'); ?></span>
+						</a>
+					<?php endif; ?>
+
+					<?php if ($accountHtml): ?>
+						<a href="#header-account" class="skip-link skip-account">
+							<span class="icon ic ic-user"></span>
+							<span class="label"><?php echo $this->__('My Account'); ?></span>
+						</a>
+					<?php endif; ?>
+
+					<?php if ($miniCompareHtml): ?>
+						<a href="#header-compare" class="skip-link skip-compare">
+							<span class="icon ic ic-compare"></span>
+							<span class="label"><?php echo $this->__('Compare'); ?></span>
+						</a>
+					<?php endif; ?>
+
+					<!-- Mobile cart wrapper -->
+					<div id="mini-cart-wrapper-mobile"></div>
+
+					<!-- Left column -->
+					<div class="hp-block <?php echo $leftColGridClass; ?>">
+
+						<div class="logo-wrapper logo-wrapper--regular">
+						<?php if ($this->getIsHomePage()): ?>
+							<h1 class="logo logo--regular"><strong><?php echo $this->getLogoAlt() ?></strong><a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>"><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a></h1>
+						<?php else: ?>
+							<a class="logo logo--regular" href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>"><strong><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
+						<?php endif; ?>
+						</div>
+
+					</div>
+
+					<!-- Central column -->
+					<?php if ($centralColUnits): ?>
+					<div id="header-search" class="hp-block search-wrapper-centered clearer <?php echo $centralColGridClass; ?> <?php echo $searchClasses; ?> skip-content skip-content--style">
+						<?php echo $p['centralCol'][0]; ?>
+					</div>
+					<?php endif; ?>
+
+					<!-- Right column -->
+					<div class="hp-block user-menu clearer <?php echo $rightColGridClass; ?>">
+
+						<?php if (isset($p['rightCol'][0])): ?>
+							<div id="header-search" class="search-wrapper-p0 <?php echo $searchClasses; ?> skip-content skip-content--style"><?php echo $p['rightCol'][0]; ?></div>
+						<?php endif; ?>
+
+						<?php if (isset($p['rightColBreak'][0])) echo $p['rightColBreak'][0]; ?>
+
+						<?php if ($miniCartHtml): //Mini cart ?>
+							<div id="mini-cart-wrapper-regular">
+								<?php echo $miniCartHtml; ?>
+							</div>
+						<?php endif; ?>
+
+						<?php if (isset($p['rightColBreak'][1])) echo $p['rightColBreak'][1]; ?>
+
+						<?php if (isset($p['rightCol'][1])): ?>
+							<div id="header-search" class="search-wrapper-p1 <?php echo $searchClasses; ?> skip-content skip-content--style"><?php echo $p['rightCol'][1]; ?></div>
+						<?php endif; ?>
+						
+						<?php if (isset($p['rightColBreak'][2])) echo $p['rightColBreak'][2]; ?>
+
+						<?php echo $miniCompareHtml; //Mini compare ?>
+
+						<?php if (isset($p['rightColBreak'][3])) echo $p['rightColBreak'][3]; ?>
+
+						<?php if (isset($p['rightCol'][2])): ?>
+							<div id="header-search" class="search-wrapper-p2 <?php echo $searchClasses; ?> skip-content skip-content--style"><?php echo $p['rightCol'][2]; ?></div>
+						<?php endif; ?>
+						
+						<?php if (isset($p['rightColBreak'][4])) echo $p['rightColBreak'][4]; ?>
+
+						<div id="header-account" class="top-links links-wrapper-separators-left skip-content skip-content--style">
+
+							<?php
+							//Additional custom Top Links
+							if ($tmpHtml = $this->getChildHtml('block_header_top_links2'))
+								echo $tmpHtml;
+
+							//Default Magento top links (page.xml)
+							if ($theme->getCfg('magento_blocks/top_links'))
+								echo $this->getChildHtml('topLinks');
+
+							//Custom top links - override Magento's default Top Links
+							if ($tmpHtml = $this->getChildHtml('block_header_top_links'))
+								echo $tmpHtml;
+							?>
+						</div> <!-- end: top-links -->
+
+						<?php if (isset($p['rightColBreak'][5])) echo $p['rightColBreak'][5]; ?>
+
+						<?php if (isset($p['rightCol'][3])): ?>
+							<div id="header-search" class="search-wrapper-p3 <?php echo $searchClasses; ?> skip-content skip-content--style"><?php echo $p['rightCol'][3]; ?></div>
+						<?php endif; ?>
+
+					</div> <!-- end: user-menu -->
+					
+				</div> <!-- end: v-grid-container -->
+
+			</div> <!-- end: inner-container -->
+		</div> <!-- end: header-primary -->
+	</div> <!-- end: header-primary-container -->
+
+	<div id="header-nav" class="nav-container sticky-container skip-content">
+		<div class="nav container clearer<?php if ($classes['nav']) echo " " . $classes['nav']; ?>">
+			<div class="inner-container">
+				<?php echo $menuHtml; ?>
+			</div> <!-- end: inner-container -->
+		</div> <!-- end: nav -->
+	</div> <!-- end: nav-container -->
+
+</div> <!-- end: header-container3 -->
+</div> <!-- end: header-container2 -->
+</div> <!-- end: header-container -->
+
+
+
+<?php //Scripts %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ?>
+
+<script type="text/javascript">
+//<![CDATA[
+
+	<?php //Mobile mode ------------------------------------------------- ?>
+	<?php if ($mobileHeaderMode): ?>
+
+		var SmartHeader = {
+
+			mobileHeaderThreshold : 770
+			, rootContainer : jQuery('.header-container')
+
+			, init : function()
+			{
+				enquire.register('(max-width: ' + (SmartHeader.mobileHeaderThreshold - 1) + 'px)', {
+					match: SmartHeader.moveElementsToMobilePosition,
+					unmatch: SmartHeader.moveElementsToRegularPosition
+				});
+			}
+
+			, activateMobileHeader : function()
+			{
+				SmartHeader.rootContainer.addClass('header-mobile').removeClass('header-regular');
+                jQuery('.custom-section').addClass('custom-mobile').removeClass('custom-regular');
+			}
+
+			, activateRegularHeader : function()
+			{
+				SmartHeader.rootContainer.addClass('header-regular').removeClass('header-mobile');
+                jQuery('.custom-section').addClass('custom-regular').removeClass('custom-mobile');
+			}
+
+			, moveElementsToMobilePosition : function()
+			{
+				SmartHeader.activateMobileHeader();
+
+				jQuery('#mini-cart-wrapper-mobile').prepend(jQuery('#mini-cart'));
+				jQuery('.skip-active').removeClass('skip-active');
+				
+				//Disable dropdowns
+				jQuery('#mini-cart').removeClass('dropdown');
+				jQuery('#mini-compare').removeClass('dropdown');
+
+				//Clean up after dropdowns: reset the "display" property
+				jQuery('#header-cart').css('display', '');
+				jQuery('#header-compare').css('display', '');
+
+			}
+
+			, moveElementsToRegularPosition : function()
+			{
+				SmartHeader.activateRegularHeader();
+
+				jQuery('#mini-cart-wrapper-regular').prepend(jQuery('#mini-cart'));
+				jQuery('.skip-active').removeClass('skip-active');
+
+				//Enable dropdowns
+				jQuery('#mini-cart').addClass('dropdown');
+				jQuery('#mini-compare').addClass('dropdown');
+			}
+
+		}; //end: SmartHeader
+
+		SmartHeader.init();
+
+		jQuery(function($) {
+
+			//Skip Links
+			var skipContents = $('.skip-content');
+			var skipLinks = $('.skip-link');
+
+			skipLinks.on('click', function (e) {
+				e.preventDefault();
+
+				var self = $(this);
+				var target = self.attr('href');
+
+				//Get target element
+				var elem = $(target);
+
+				//Check if stub is open
+				var isSkipContentOpen = elem.hasClass('skip-active') ? 1 : 0;
+
+				//Hide all stubs
+				skipLinks.removeClass('skip-active');
+				skipContents.removeClass('skip-active');
+
+				//Toggle stubs
+				if (isSkipContentOpen) {
+					self.removeClass('skip-active');
+				} else {
+					self.addClass('skip-active');
+					elem.addClass('skip-active');
+				}
+			});
+
+		}); //end: on document ready
+
+	<?php endif; //end: mode  ?>
+
+
+
+	<?php //Sticky header ------------------------------------------------- ?>
+	<?php if ($sticky): ?>
+
+		jQuery(function($) {
+
+			var StickyHeader = {
+
+				stickyThreshold : <?php echo $mobileMenuThreshold; ?> 
+				, isSticky : false
+				, isSuspended : false
+				, headerContainer : $('.header-container')
+				, stickyContainer : $('.sticky-container')	//.nav-container
+				, stickyContainerOffsetTop : 55
+
+				, init : function()
+				{
+					StickyHeader.stickyContainerOffsetTop = 
+						StickyHeader.stickyContainer.offset().top + StickyHeader.stickyContainer.outerHeight();
+
+					StickyHeader.applySticky();
+					StickyHeader.hookToScroll();
+
+					if (StickyHeader.stickyThreshold > 0)
+					{
+						enquire.register('(max-width: ' + (StickyHeader.stickyThreshold - 1) + 'px)', {
+							match: StickyHeader.suspendSticky,
+							unmatch: StickyHeader.unsuspendSticky
+						});
+					}
+				}
+
+				, applySticky : function()
+				{
+					if (StickyHeader.isSuspended) return;
+
+					var viewportOffsetTop = $(window).scrollTop();
+					if (viewportOffsetTop > StickyHeader.stickyContainerOffsetTop)
+					{
+						if (!StickyHeader.isSticky)
+						{
+							StickyHeader.activateSticky();
+						}
+					}
+					else
+					{
+						if (StickyHeader.isSticky)
+						{
+							StickyHeader.deactivateSticky();
+						}
+					}
+				}
+
+				, activateSticky : function()
+				{
+					var height = StickyHeader.stickyContainer.outerHeight();
+					StickyHeader.headerContainer.css('padding-bottom', height); //Fill in the space of the removed container
+					//$('.page').css('padding-top', height); //Fill in the space of the removed container
+
+					StickyHeader.headerContainer.addClass('sticky-header');
+					StickyHeader.stickyContainer.css('margin-top', '-' + height + 'px').animate({'margin-top': '0'}, 200, 'easeOutCubic');
+					//StickyHeader.stickyContainer.css('opacity', '0').animate({'opacity': '1'}, 300, 'easeOutCubic');
+					StickyHeader.isSticky = true;
+				}
+
+				, deactivateSticky : function()
+				{
+					StickyHeader.headerContainer.css('padding-bottom', '');
+					//$('.page').css('padding-top', '');
+
+					StickyHeader.headerContainer.removeClass('sticky-header');
+					StickyHeader.isSticky = false;
+				}
+
+				, suspendSticky : function()
+				{
+					StickyHeader.isSuspended = true;
+					StickyHeader.deactivateSticky();
+				}
+
+				, unsuspendSticky : function()
+				{
+					StickyHeader.isSuspended = false;
+					StickyHeader.applySticky();
+				}
+
+				, hookToScroll : function()
+				{
+					$(window).on("scroll", StickyHeader.applySticky);
+				}
+
+				, hookToScrollDeferred : function()
+				{
+					var windowScrollTimeout;
+					$(window).on("scroll", function() {
+						clearTimeout(windowScrollTimeout);
+						windowScrollTimeout = setTimeout(function() {
+							StickyHeader.applySticky();
+						}, 50);
+					});
+				}
+
+			}; //end: StickyHeader
+
+			StickyHeader.init();
+
+		}); //end: on document ready
+
+	<?php endif; //end: if sticky  ?>
+
+//]]>
+</script>
