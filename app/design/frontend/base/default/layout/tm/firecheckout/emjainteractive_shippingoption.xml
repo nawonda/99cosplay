@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<layout>
+    <firecheckout_index_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/emjainteractive/shippingoption.js</name>
+            </action>
+        </reference>
+    </firecheckout_index_index>
+</layout>

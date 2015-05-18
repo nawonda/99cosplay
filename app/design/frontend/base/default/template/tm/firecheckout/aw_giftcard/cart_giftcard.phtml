@@ -1,0 +1,166 @@
+<?php
+$giftcard = Mage::getSingleton('checkout/session')->getCurrentGiftCard();
+Mage::getSingleton('checkout/session')->setCurrentGiftCard(null);
+?>
+<div class="firecheckout-section discount aw_giftcard">
+    <div class="block-title"><span><?php echo $this->__('Gift Cards') ?></span></div>
+    <div class="discount-form">
+    <?php if($giftcard): ?>
+        <div id="aw-giftcard-info-block">
+            <div class="fieldset">
+                <table>
+                    <tr>
+                        <td class="label">
+                            <?php echo $this->__('Code');?>
+                        </td>
+                        <td>
+                            <strong class="giftcard-code">
+                                <?php echo $giftcard->getCode();?>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <?php echo $this->__('Active');?>
+                        </td>
+                        <td>
+                            <strong class="giftcard-status">
+                                <?php echo Mage::getModel('aw_giftcard/source_product_attribute_option_yesno')->getOptionText($giftcard->getStatus());?>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <?php echo $this->__('Status');?>
+                        </td>
+                        <td>
+                            <strong class="giftcard-state">
+                                <?php echo Mage::getModel('aw_giftcard/source_giftcard_status')->getOptionByValue($giftcard->getState());?>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <?php echo $this->__('Balance');?>
+                        </td>
+                        <td>
+                            <strong>
+                                <span class="price">
+                                    <?php echo Mage::helper('core')->currency($giftcard->getBalance());?>
+                                </span>
+                            </strong>
+                        </td>
+                    </tr>
+                    <?php if ($giftcard->getExpireAt()): ?>
+                        <tr>
+                            <td class="label">
+                                <?php echo $this->__('Expires');?>
+                            </td>
+                            <td>
+                                <strong>
+                                    <?php echo $this->formatDate($giftcard->getExpireAt(), 'short')?>
+                                </strong>
+                            </td>
+                        </tr>
+                    <?php endif;?>
+                </table>
+            </div>
+        </div>
+    <?php endif;?>
+
+        <label for="giftcard_code"><?php echo $this->__('Enter your gift card code') ?></label>
+        <div class="<?php if($this->isEEVersion()) echo 'v-fix';else echo 'input-box';?>">
+            <input class="required-entry input-text" id="giftcard_code" name="giftcard_code" value="" />
+        </div>
+        <?php if (!$this->isEEVersion()): ?>
+            <div class="buttons-set">
+        <?php endif;?>
+            <button class="button giftcard-apply" id="giftcard-apply" type="button" value="<?php echo $this->__('Add Gift Card') ?>">
+                <span><span><?php echo $this->__('Add Gift Card') ?></span></span>
+            </button>
+            <button class="button<?php if($this->isEEVersion()):?> status<?php endif;?>" onclick="awGiftcardCheckStatus()" type="button" value="<?php echo $this->__('Check Gift Card status') ?>">
+                <span><span><?php echo $this->__('Check Gift Card status') ?></span></span>
+            </button>
+        <?php if (!$this->isEEVersion()): ?>
+            </div>
+        <?php endif;?>
+
+        <input id="status_input" type="hidden" value="0" name="status_flag">
+
+        <script type="text/javascript">
+            awgiftcardApplyUrl = "<?php echo Mage::getUrl('awgiftcard/card/apply', array('_secure' => Mage::app()->getStore(true)->isCurrentlySecure())) ?>";
+            awgiftcardRemoveUrl = "<?php echo Mage::getUrl('awgiftcard/card/remove', array('_secure' => Mage::app()->getStore(true)->isCurrentlySecure())) ?>";
+            var awGiftcardCheckStatus = function () {
+                $('status_input').value = 1;
+
+                var code = $('giftcard_code');
+                if (!code.value.length) {
+                    code.addClassName('required-entry');
+                    Validation.validate(code);
+                    code.removeClassName('required-entry');
+                    return;
+                }
+
+                new Ajax.Request(awgiftcardApplyUrl, {
+                    method:'post',
+                    parameters:$(checkout.form).serialize(true),
+                    onComplete: function() {
+                        checkout.update(checkout.urls.shopping_cart, {
+                            'review': 1
+                        });
+                    }
+                });
+
+                return true;
+            }
+        </script>
+
+        <script type="text/javascript">
+        //<![CDATA[
+        $('giftcard-apply') && $('giftcard-apply').observe('click', function(e) {
+            var code = $('giftcard_code');
+            if (!code.value.length) {
+                code.addClassName('required-entry');
+                Validation.validate(code);
+                code.removeClassName('required-entry');
+                return;
+            }
+            $('status_input').value = 0;
+
+            new Ajax.Request(awgiftcardApplyUrl, {
+                method:'post',
+                parameters:$(checkout.form).serialize(true),
+                onComplete: function() {
+                    checkout.update(checkout.urls.shopping_cart, {
+                        'review': 1
+                    });
+                }
+            });
+        });
+        $('giftcard_code').observe('keydown', function(e) {
+            if (e.keyCode != 13) {
+                return;
+            }
+            var code = $('giftcard_code');
+            if (!code.value.length) {
+                code.addClassName('required-entry');
+                Validation.validate(code);
+                code.removeClassName('required-entry');
+                return;
+            }
+            $('status_input').value = 0;
+
+            new Ajax.Request(awgiftcardApplyUrl, {
+                method:'post',
+                parameters:$(checkout.form).serialize(true),
+                onComplete: function() {
+                    checkout.update(checkout.urls.shopping_cart, {
+                        'review': 1
+                    });
+                }
+            });
+        });
+        //]]>
+        </script>
+    </div>
+</div>

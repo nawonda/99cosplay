@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<layout version="1.0">
+    <firecheckout_index_index>
+        <reference name="head">
+            <!--<action method="addJs"><script>rack/getpostcode.js</script></action>-->
+            <block type="core/template" name="ajaxzip" template="getpostcode/ajaxzip.phtml"/>
+        </reference>
+        <reference name="before_body_end">
+            <block type="core/template" name="getpostcode.billing" template="getpostcode/ajaxzip_customer.phtml">
+                <action method="setZipId"><p>billing:postcode</p></action>
+                <action method="setZipName"><p>billing[postcode]</p></action>
+                <action method="setRegionId"><p>billing[region_id]</p></action>
+                <action method="setCityId"><p>billing[city]</p></action>
+                <action method="setStreetId"><p>billing[street1]</p></action>
+                <!-- buttonId: false, auto, or real button id -->
+                <action method="setButtonId"><p>auto</p></action>
+                <action method="setButtonLabel"><p>Get Address</p></action>
+                <action method="setZipFieldSize"><p>150px</p></action>
+            </block>
+            <block type="core/template" name="getpostcode.shipping" template="getpostcode/ajaxzip_customer.phtml">
+                <action method="setZipId"><p>shipping:postcode</p></action>
+                <action method="setZipName"><p>shipping[postcode]</p></action>
+                <action method="setRegionId"><p>shipping[region_id]</p></action>
+                <action method="setCityId"><p>shipping[city]</p></action>
+                <action method="setStreetId"><p>shipping[street1]</p></action>
+                <action method="setZipFieldSize"><p>150px</p></action>
+                <!-- buttonId: false, auto, or real button id -->
+                <action method="setButtonId"><p>auto</p></action>
+                <action method="setButtonLabel"><p>Get Address</p></action>
+            </block>
+        </reference>
+    </firecheckout_index_index>
+</layout>

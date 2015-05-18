@@ -1,0 +1,135 @@
+<li class="wide">
+    <div class="field">
+        <label class="required" for="shipping:is_business_address"><em>*</em><?php echo $this->__('Is Business Address') ?></label>
+
+        <div class="input-box">
+            <select class="required-entry" id="shipping:is_business_address" name="shipping[is_business_address]" title="<?php echo $this->__('Is Business Address') ?>">
+                <option value="0">
+                    <?php print $this->__('No') ?>
+                </option>
+
+                <option value="1">
+                    <?php print $this->__('Yes') ?>
+                </option>
+            </select>
+        </div>
+    </div>
+</li>
+<li class="wide">
+    <div class="field" id="field-shipping-tax_code">
+        <label class="required" for="shipping:tax_code"><em>*</em><?php echo $this->__('Tax Code') ?></label>
+
+        <div class="input-box">
+            <input class="input-text required-entry validate-tax_code" id="shipping:tax_code" name="shipping[tax_code]" style="text-transform:uppercase;" title="<?php echo $this->__('Tax Code') ?>" type="text" value="<?php echo $this->htmlEscape($this->getAddress()->getTaxCode()) ?>">
+        </div>
+    </div>
+</li>
+
+<li class="fields">
+    <div class="field" id="field-shipping-company">
+        <label class="required" for="shipping:company"><em>*</em><?php echo $this->__('Company') ?></label>
+
+        <div class="input-box">
+            <input class="input-text required-entry" id="shipping:company" name="shipping[company]" title="<?php echo $this->__('Company') ?>" type="text" value="<?php echo $this->htmlEscape($this->getAddress()->getCompany()) ?>">
+        </div>
+    </div>
+
+    <div class="field" id="field-shipping-vat_number">
+        <label class="required" for="shipping:vat_number"><em>*</em><?php echo $this->__('VAT Number') ?></label>
+
+        <div class="input-box">
+            <input class="input-text required-entry validate-vat_number" id="shipping:vat_number" name="shipping[vat_number]" title="<?php echo $this->__('VAT Number') ?>" type="text" value="<?php echo $this->htmlEscape($this->getAddress()->getVatNumber()) ?>">
+        </div>
+    </div>
+</li>
+
+<?php
+    $block = new Webgriffe_TaxIdPro_Block_AddressEdit();
+?>
+<script stype="text/javascript">
+//<![CDATA[
+if (parseInt($('shipping:is_business_address').getValue())) { // If is a business address...
+    //$('field-shipping-tax_code').hide();
+    //$('shipping:tax_code').setValue('');
+    $('field-shipping-vat_number').show();
+    $('field-shipping-company').show();
+} else {
+    //$('field-shipping-tax_code').show();
+    $('field-shipping-vat_number').hide();
+    $('shipping:vat_number').setValue('');
+    $('field-shipping-company').hide();
+    $('shipping:company').setValue('');
+}
+Event.observe(window, 'load', function() {
+    $('shipping:is_business_address').observe('change', function(event) {
+        if (parseInt(this.getValue())) { // If is a business address...
+            //$('field-shipping-tax_code').hide();
+            //$('shipping:tax_code').setValue('');
+            $('field-shipping-vat_number').show();
+            $('field-shipping-company').show();
+        } else {
+            //$('field-shipping-tax_code').show();
+            $('field-shipping-vat_number').hide();
+            $('shipping:vat_number').setValue('');
+            $('field-shipping-company').hide();
+            $('shipping:company').setValue('');
+        }
+    });
+    $('shipping:tax_code').observe('blur', function(event) {
+        this.setValue(this.getValue().toUpperCase());
+    });
+    $('shipping:vat_number').observe('blur', function(event) {
+        this.setValue(this.getValue().toUpperCase());
+    });
+    Validation.addAllThese([
+        ['validate-tax_code', '<?php echo $this->__("Please, enter a valid Tax Code.") ?>',
+            function(v, elm) {
+                elm.value = elm.value.toUpperCase();
+                v = elm.value; <?php echo $block->getFormatsJs('tax_code'); ?>
+                var ccode = $('shipping:country_id').value;
+                if (isValid[ccode] == undefined) {
+                    isValid[ccode] = true;
+                }
+                return Validation.get('IsEmpty').test(v) || isValid[ccode];
+            }
+        ],
+        ['validate-vat_number', '<?php echo $this->__("Please, enter a valid VAT Number.") ?>',
+            function(v, elm) {
+                elm.value = elm.value.toUpperCase();
+                v = elm.value; <?php echo $block->getFormatsJs('vat_number'); ?>
+                var ccode = $('shipping:country_id').value;
+                if (isValid[ccode] == undefined) {
+                    isValid[ccode] = true;
+                }
+                return Validation.get('IsEmpty').test(v) || isValid[ccode];
+            }
+        ]
+    ]);
+    Event.observe(window, 'load', function() {
+        shippingCountryIsRequired($('shipping:country_id'));
+        $('shipping:country_id').onchange = function() {
+            shippingCountryIsRequired($('shipping:country_id'));
+        }
+    });
+});
+
+function shippingCountryIsRequired(element) {
+    var taxcodeCountries = '<?php echo $block->getCountriesJs("tax_code") ?>';
+    if (taxcodeCountries.indexOf(element.getValue()) >= 0) {
+        $$('#field-shipping-tax_code label em')[0].innerHTML = '*';
+        $('shipping:tax_code').className = 'required-entry input-text validate-tax_code';
+    } else {
+        $$('#field-shipping-tax_code label em')[0].innerHTML = '';
+        $('shipping:tax_code').className = 'input-text validate-tax_code';
+    }
+    var vatnumberCountries = '<?php echo $block->getCountriesJs("vat_number") ?>';
+    if (vatnumberCountries.indexOf(element.getValue()) >= 0) {
+        $$('#field-shipping-vat_number label em')[0].innerHTML = '*';
+        $('shipping:vat_number').className = 'required-entry input-text validate-vat_number';
+    } else {
+        $$('#field-shipping-vat_number label em')[0].innerHTML = '';
+        $('shipping:vat_number').className = 'input-text validate-vat_number';
+    }
+}
+//]]>
+</script>

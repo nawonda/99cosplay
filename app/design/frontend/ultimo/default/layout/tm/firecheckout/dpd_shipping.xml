@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<layout>
+    <firecheckout_index_index>
+        <update handle="dpd_checkout_header"/>
+    </firecheckout_index_index>
+</layout>

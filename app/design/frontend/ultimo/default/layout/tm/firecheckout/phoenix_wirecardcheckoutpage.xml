@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <firecheckout_index_index>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/phoenix/wirecard_checkout_page/stylesheet.css</stylesheet></action>
+        </reference>
+        <reference name="content">
+            <!-- Block moved to content because it sets the session flag that needed in payment block -->
+            <block type="wirecard_checkout_page/seamless_script" name="wirecard_checkout_page_js" template="wirecard_checkout_page/seamless/script.phtml" before="-"/>
+        </reference>
+    </firecheckout_index_index>
+</layout>

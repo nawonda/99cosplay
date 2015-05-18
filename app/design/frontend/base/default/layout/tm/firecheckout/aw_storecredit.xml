@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <firecheckout_index_index>
+        <reference name="head">
+            <action method="addCss"><name>aw_storecredit/css/styles.css</name></action>
+            <action method="addItem"><type>skin_js</type><name>aw_storecredit/js/aw_storecredit_payment.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="aw_storecredit/frontend_checkout_onepage_payment_additional" template="aw_storecredit/checkout/onepage/payment/additional.phtml" name="aw_storecredit.additional" />
+        </reference>
+    </firecheckout_index_index>
+</layout>
