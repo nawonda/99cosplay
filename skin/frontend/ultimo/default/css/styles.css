@@ -2991,4 +2991,5 @@ body.cms-index-index .breadcrumbs { display:none; }
 }
 .viewed-product-wrapper .product-name{
     margin-top: 10px;
+    width: 230px;
 }
