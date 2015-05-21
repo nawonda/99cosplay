@@ -96,6 +96,8 @@
 			<block type="core/text_list" name="postscript" as="postscript" translate="label">
 				<label>Page Postscript</label>
 			</block>
+
+            <block type="reports/product_viewed" name="product.recently.viewed"  as="product_recently_viewed" template="reports/product_viewed.phtml" />
 		</reference>
 		
 		
@@ -243,7 +245,7 @@
             <remove name="footer_links"/>
 			<!-- Move newsletter to the footer -->
 			<block type="newsletter/subscribe" name="newsletter" as="newsletter" template="newsletter/subscribe.phtml"/>
-            <block type="reports/product_viewed" name="product.recently.viewed"  as="product_recently_viewed" template="reports/product_viewed.phtml" />
+            <!--<block type="reports/product_viewed" name="product.recently.viewed"  as="product_recently_viewed" template="reports/product_viewed.phtml" />-->
 
 			<!-- Custom footer links - override default Magento footer links (id: footer_links) -->
 			<block type="cms/block" name="block_footer_links">
