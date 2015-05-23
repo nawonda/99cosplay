@@ -39,7 +39,7 @@
     <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
 <?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
     <p>
-        <?php echo $this->__('列印定單明細 <a href="%s" style="text-decoration: underline;" onclick="this.target=\'_blank\'">按此列印</a>', $this->getPrintUrl()) ?>
+        列印定單明細<a href="<?php echo $this->getPrintUrl(); ?>" style="text-decoration: underline;" onclick="this.target=\'_blank\'"> 按此列印</a>
         <?php echo $this->getChildHtml() ?>
     </p>
 <?php endif;?>

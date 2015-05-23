@@ -64,8 +64,16 @@
                 <h2><?php echo $this->__('Payment Method') ?></h2>
             </div>
             <div class="box-content">
+
                 <?php echo $this->getPaymentInfoHtml() ?>
+                <?php $payment = $_order->getPayment()->getMethodInstance()->getTitle(); ?>
+                <?php if($payment == '銀行轉帳/ATM轉帳') : ?>
+                <div class="pay-atm"></div>
+                <?php endif;?>
+
             </div>
         </div>
     </div>
 </div>
+
+

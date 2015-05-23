@@ -10,13 +10,25 @@
         <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
     <?php endif;?>
 
-    <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+    <p style="margin-top: 5px;"><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
 
     <?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
-        <p>
-            <?php echo $this->__('Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.', $this->getPrintUrl()) ?>
+        <p style="margin-top: 5px;">
+            <?php echo $this->__('列印定單明細 <a href="%s" style="text-decoration: underline;" onclick="this.target=\'_blank\'">按此列印</a>', $this->getPrintUrl()) ?>
         </p>
     <?php endif;?>
+
+    <div class="amt-info" style="margin-top: 5px; display: none;">
+        <p>*** 請於匯款完成後簡訊 (0975290922) 或是 LINE (nawonda) 回傳銀行帳號後四碼 ***</p>
+        <div style="width: 200px; background-color: #f5f5f5; padding: 10px; margin-top: 10px;">
+            <p style="margin-top: 5px;">銀行轉帳/ATM轉帳</p>
+            <p style="margin-top: 5px;">戶名：張維宇</p>
+            <p style="margin-top: 5px;">銀行代碼與名稱：031-國泰世華</p>
+            <p style="margin-top: 5px;">分行名稱：仁愛分行</p>
+            <p style="margin-top: 5px;">帳號：201506013432</p>
+        </div>
+
+    </div>
 <?php endif;?>
 
 <?php
@@ -58,3 +70,10 @@ endif;
 <div class="buttons-set">
     <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
 </div>
+
+<script type="text/javascript">
+
+    if(jQuery('.pay-atm')){
+        jQuery('.amt-info').show();
+    }
+</script>
