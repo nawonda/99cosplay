@@ -1,15 +1,21 @@
 <?php
-/**
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE_AFL.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- *
- * @category    design
- * @package     base_default
- * @copyright   Copyright (c) 2011-2012 Sergey Storchay <r8@r8.com.ua>
- * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- */
+header("content-Type: text/html; charset=Utf-8");
+
+$suID = 'jy1215jy@gmail.com';
+$processID = '50000016';
+$stCate = '';
+$stCode = '';
+$rtURL = Mage::getBaseUrl().'firecheckout/';
+$webPara = '';
+if($_POST['processID']){
+ $processID = $_POST['processID'];
+ $stCate = $_POST['stCate'];
+ $stCode = $_POST['stCode'];
+ $stName = $_POST['stName'];
+ $stAddr = $_POST['stAddr'];
+ $stTel = $_POST['stTel'];
+ $webPara = $_POST['webPara'];
+}
 ?>
 <form action="" id="checkout-agreements" onsubmit="return false;">
     <div class="buttons-set">
@@ -18,9 +24,10 @@
                 <fieldset>
                     <ul>
                         <li class="wide">
-                            <label for="ordercomment-comment"><?php echo Mage::helper('ordercomment')->__('Order Comment') ?></label>
+<!--                            <label for="ordercomment-comment">--><?php //echo Mage::helper('ordercomment')->__('Order Comment') ?><!--</label>-->
+                            <button style="margin-bottom: 10px;" id='get_map' type="button" title="超商地圖" class="button" onclick="show_map();">查看超商代碼</button>
                             <div class="input-box">
-                                <textarea id="ordercomment-comment" class="input-text validation-passed" name="ordercomment[comment]" title="<?php echo $this->__('Order Comment') ?>" rows="5" cols="10"></textarea>
+                                <textarea id="ordercomment-comment" class="input-text validation-passed" name="ordercomment[comment]" title="<?php echo $this->__('Order Comment') ?>" rows="5" cols="10"><?php if($_POST['processID']): ?><?php echo "超商店名: ".$stName."\n";echo "超商代號: ".$stCate.$stCode."\n";echo "超商地址: ".$stAddr."\n";?><?php endif;?></textarea>
                             </div>
                         </li>
                     </ul>
@@ -48,3 +55,20 @@
         </ol>
     <?php endif; ?>
 </form>
+
+<script type="text/javascript">
+    jQuery('#get_map').on('click',function(){
+        suID = "<?php echo $suID?>";
+        processID = "<?php echo $processID?>";
+        stCate = "<?php echo $stCate?>";
+        stCode = "<?php echo $stCode?>";
+        rtURL = "<?php echo $rtURL?>";
+        webPara = "<?php echo $webPara?>";
+
+        mapUrl = "http://map.ezship.com.tw/ezship_map_web.jsp?suID=" + suID +
+            "&processID="+ processID + "&stCate=" + stCate + "&stCode="+stCode + "&rtURL="+rtURL +"&webPara="+webPara;
+
+        window.location = mapUrl;
+    })
+
+</script>
