@@ -204,19 +204,21 @@ endif;
 
 <script type="text/javascript">
 
-    jQuery('#s_method_flatrate2_flatrate2').on('click', function() {
-        jQuery('#agreements-wrapper').show();
-    })
+    if(jQuery('#s_method_flatrate_flatrate').is(':checked')){
+        jQuery('#get_map').show();
+    }else{
+        jQuery('#get_map').hide();
+    }
 
     jQuery('#s_method_flatrate_flatrate').on('click', function() {
-        jQuery('#agreements-wrapper').hide();
+        jQuery('#get_map').show();
     })
 
-    jQuery('#s_method_flatrate1_flatrate1').on('click', function() {
-        jQuery('#agreements-wrapper').hide();
+    jQuery('#s_method_flatrate2_flatrate2').on('click', function() {
+        jQuery('#get_map').hide();
     })
     jQuery('#s_method_flatrate3_flatrate3').on('click', function() {
-        jQuery('#agreements-wrapper').hide();
+        jQuery('#get_map').hide();
     })
 
 </script>

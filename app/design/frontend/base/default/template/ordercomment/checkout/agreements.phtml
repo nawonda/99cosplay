@@ -25,7 +25,8 @@ if($_POST['processID']){
                     <ul>
                         <li class="wide">
 <!--                            <label for="ordercomment-comment">--><?php //echo Mage::helper('ordercomment')->__('Order Comment') ?><!--</label>-->
-                            <button style="margin-bottom: 10px;" id='get_map' type="button" title="超商地圖" class="button" onclick="show_map();">查看超商代碼</button>
+                            <label style="line-height: 50px;">買家留言: (若選擇超商取貨，請填入超商資訊)</label>
+                            <button style="margin-bottom: 10px; float: right;" id='get_map' type="button" title="超商地圖" class="button" onclick="show_map();">查看超商代碼</button>
                             <div class="input-box">
                                 <textarea id="ordercomment-comment" class="input-text validation-passed" name="ordercomment[comment]" title="<?php echo $this->__('Order Comment') ?>" rows="5" cols="10"><?php if($_POST['processID']): ?><?php echo "超商店名: ".$stName."\n";echo "超商代號: ".$stCate.$stCode."\n";echo "超商地址: ".$stAddr."\n";?><?php endif;?></textarea>
                             </div>
