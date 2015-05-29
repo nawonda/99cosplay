@@ -106,9 +106,10 @@
 <!--                    <div class="prev_block block_container"><img src="http://99cosplay.com/media/banner/prev_block.jpg" alt=""></div>-->
 <!--                    <div class="next_block block_container"><img src="http://99cosplay.com/media/banner/next_block.jpg" alt=""></div>-->
                     <div id="<?php echo $sliderId; ?>" class="slides">
-                    <?php foreach ($slides as $bid): ?>
+
+                    <?php foreach ($slides as $index => $bid): ?>
                         <?php if (!empty($bid)): ?>
-                            <div class="item slide">
+                            <div class="item slide <?php echo "slide_".$index;?>">
                                 <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId($bid)->toHtml(); ?>
                             </div>
                         <?php endif; ?>
