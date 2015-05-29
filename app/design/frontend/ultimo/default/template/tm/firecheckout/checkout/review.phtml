@@ -46,7 +46,8 @@
 <?php endif; ?>
 
 <div id="checkout-review" class="firecheckout-section">
-    <div class="block-title"><span><?php echo $this->__('Checkout Review') ?></span></div>
+<!--    <div class="block-title"><span>--><?php //echo $this->__('Checkout Review') ?><!--</span></div>-->
+    <div class="block-title"><span><?php echo "訂單總覽" ?></span></div>
     <?php $agreements = $this->getChildHtml('agreements') ?>
     <?php if (!empty($agreements)) : ?>
         <div id="agreements-wrapper">
